@@ -7,17 +7,17 @@ import RevealMarkdown from 'reveal.js/plugin/markdown';
 import RevealHighlight from 'reveal.js/plugin/highlight';
 import RevealNotes from 'reveal.js/plugin/notes';
 
-const themeLoaders = {
-  black: () => import('reveal.js/theme/black.css'),
-  white: () => import('reveal.js/theme/white.css'),
-  league: () => import('reveal.js/theme/league.css'),
-  sky: () => import('reveal.js/theme/sky.css'),
-  beige: () => import('reveal.js/theme/beige.css'),
-  simple: () => import('reveal.js/theme/simple.css'),
-  solarized: () => import('reveal.js/theme/solarized.css'),
-  night: () => import('reveal.js/theme/night.css'),
-  moon: () => import('reveal.js/theme/moon.css'),
-};
+const supportedThemes = new Set([
+  'black',
+  'white',
+  'league',
+  'sky',
+  'beige',
+  'simple',
+  'solarized',
+  'night',
+  'moon',
+]);
 
 const rawPresentations = import.meta.glob('../content/*.md', {
   query: '?raw',
@@ -40,7 +40,7 @@ const presentations = Object.entries(rawPresentations)
       content: parsed.content,
     };
   })
-  .sort((a, b) => a.title.localeCompare(b.title, 'de'));
+  .sort((a, b) => a.title.localeCompare(b.title));
 
 const app = document.querySelector('#app');
 const path = normalizePath(window.location.pathname);
@@ -179,10 +179,10 @@ async function renderSlides(slug) {
 
   const params = new URLSearchParams(window.location.search);
   const selectedTheme = params.get('theme') || presentation.theme || 'black';
-  const normalizedTheme = themeLoaders[selectedTheme] ? selectedTheme : 'black';
+  const normalizedTheme = supportedThemes.has(selectedTheme) ? selectedTheme : 'black';
   const printMode = params.has('print-pdf');
 
-  await themeLoaders[normalizedTheme]();
+  await loadTheme(normalizedTheme);
 
   app.innerHTML = `
     <div class="topbar${printMode ? ' hidden-for-print' : ''}">
@@ -217,6 +217,29 @@ async function renderSlides(slug) {
   });
 
   await deck.initialize();
+}
+
+function loadTheme(theme) {
+  switch (theme) {
+    case 'white':
+      return import('reveal.js/theme/white.css');
+    case 'league':
+      return import('reveal.js/theme/league.css');
+    case 'sky':
+      return import('reveal.js/theme/sky.css');
+    case 'beige':
+      return import('reveal.js/theme/beige.css');
+    case 'simple':
+      return import('reveal.js/theme/simple.css');
+    case 'solarized':
+      return import('reveal.js/theme/solarized.css');
+    case 'night':
+      return import('reveal.js/theme/night.css');
+    case 'moon':
+      return import('reveal.js/theme/moon.css');
+    default:
+      return import('reveal.js/theme/black.css');
+  }
 }
 
 function escapeForTextarea(value) {
