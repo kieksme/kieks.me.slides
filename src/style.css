@@ -173,7 +173,9 @@ code {
   flex-wrap: wrap;
 }
 
-.reveal {
+/* Use ID+class specificity so this rule wins over reveal.css's .reveal{height:100%}
+   regardless of which CSS bundle chunk is injected last. */
+#app .reveal {
   height: calc(100vh - 4.5rem);
 }
 
@@ -191,7 +193,7 @@ code {
     display: none !important;
   }
 
-  .reveal {
+  #app .reveal {
     height: auto;
   }
 }
