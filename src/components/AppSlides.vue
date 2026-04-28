@@ -57,6 +57,14 @@ onMounted(async () => {
     center: true,
     slideNumber: true,
     plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+    // Separator patterns must live here (not as data-* HTML attributes) because
+    // Vue's static-hoisting pass double-escapes backslashes in attribute strings,
+    // turning \r?\n into \\r?\\n at runtime, which makes the RegExp never match.
+    markdown: {
+      separator: '^\\r?\\n---\\r?\\n$',
+      verticalSeparator: '^\\r?\\n--\\r?\\n$',
+      notesSeparator: '^Note:',
+    },
   })
 
   await deck.initialize()
@@ -81,12 +89,7 @@ onMounted(async () => {
 
     <div ref="revealEl" class="reveal">
       <div class="slides">
-        <section
-          data-markdown
-          data-separator="^\r?\n---\r?\n$"
-          data-separator-vertical="^\r?\n--\r?\n$"
-          data-separator-notes="^Note:"
-        >
+        <section data-markdown>
           <textarea ref="textareaEl" data-template></textarea>
         </section>
       </div>
