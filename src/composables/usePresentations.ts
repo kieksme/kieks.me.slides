@@ -14,18 +14,6 @@ export interface Presentation {
   content: string
 }
 
-const SUPPORTED_THEMES = new Set([
-  'black',
-  'white',
-  'league',
-  'sky',
-  'beige',
-  'simple',
-  'solarized',
-  'night',
-  'moon',
-])
-
 const rawFiles = import.meta.glob('../../content/*.md', {
   query: '?raw',
   import: 'default',
@@ -66,14 +54,13 @@ export const presentations: Presentation[] = Object.entries(rawFiles)
     const slug = path.split('/').pop()?.replace(/\.md$/i, '') ?? ''
     const { meta, content } = parseFrontmatter(raw)
     const title = meta.title || extractTitle(content) || slug
-    const rawTheme = meta.theme || 'black'
 
     return {
       slug,
       title,
       description: meta.description || '',
       tags: parseTags(meta.tags),
-      theme: SUPPORTED_THEMES.has(rawTheme) ? rawTheme : 'black',
+      theme: meta.theme || 'black',
       content,
     }
   })

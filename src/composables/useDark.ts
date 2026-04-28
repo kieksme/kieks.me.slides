@@ -7,14 +7,10 @@ import { usePreferredDark } from '@vueuse/core'
  * Consumed in setup/main.ts to apply a `data-theme` attribute on <html>,
  * and available to any component via import.
  */
-export const isDark = ref(
-  typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-color-scheme: dark)').matches
-    : false,
-)
+const prefersDark = usePreferredDark()
+export const isDark = ref(prefersDark.value)
 
 // Keep in sync whenever the system preference changes
-const prefersDark = usePreferredDark()
 watch(prefersDark, (val) => {
   isDark.value = val
 })

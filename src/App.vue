@@ -12,7 +12,14 @@ const path = normalizePath(window.location.pathname)
 const slug = path.startsWith('/slides/')
   ? decodeURIComponent(path.replace('/slides/', ''))
   : null
-const view = path === '/' ? 'landing' : path.startsWith('/slides/') ? 'slides' : 'not-found'
+
+function getView(p) {
+  if (p === '/') return 'landing'
+  if (p.startsWith('/slides/')) return 'slides'
+  return 'not-found'
+}
+
+const view = getView(path)
 </script>
 
 <template>
