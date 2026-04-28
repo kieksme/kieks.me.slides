@@ -1,0 +1,103 @@
+export interface PresentationMeta {
+  title?: string
+  description?: string
+  theme?: string
+  tags?: string
+}
+
+export interface Presentation {
+  slug: string
+  title: string
+  description: string
+  tags: string[]
+  theme: string
+  content: string
+}
+
+const SUPPORTED_THEMES = new Set([
+  'black',
+  'white',
+  'league',
+  'sky',
+  'beige',
+  'simple',
+  'solarized',
+  'night',
+  'moon',
+])
+
+const rawFiles = import.meta.glob('../../content/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+function parseFrontmatter(markdown: string): { meta: PresentationMeta; content: string } {
+  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/)
+  if (!match) return { meta: {}, content: markdown }
+
+  const meta: Record<string, string> = {}
+  for (const line of match[1].split(/\r?\n/)) {
+    const sep = line.indexOf(':')
+    if (sep <= 0) continue
+    const key = line.slice(0, sep).trim()
+    const value = line.slice(sep + 1).trim()
+    if (key) meta[key] = value
+  }
+
+  return { meta: meta as PresentationMeta, content: markdown.slice(match[0].length) }
+}
+
+function parseTags(tags?: string): string[] {
+  if (!tags) return []
+  return tags
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean)
+}
+
+function extractTitle(markdown: string): string {
+  const m = markdown.match(/^#\s+(.+)$/m)
+  return m ? m[1].trim() : ''
+}
+
+export const presentations: Presentation[] = Object.entries(rawFiles)
+  .map(([path, raw]) => {
+    const slug = path.split('/').pop()?.replace(/\.md$/i, '') ?? ''
+    const { meta, content } = parseFrontmatter(raw)
+    const title = meta.title || extractTitle(content) || slug
+    const rawTheme = meta.theme || 'black'
+
+    return {
+      slug,
+      title,
+      description: meta.description || '',
+      tags: parseTags(meta.tags),
+      theme: SUPPORTED_THEMES.has(rawTheme) ? rawTheme : 'black',
+      content,
+    }
+  })
+  .sort((a, b) => a.title.localeCompare(b.title))
+
+export function loadTheme(theme: string): Promise<unknown> {
+  switch (theme) {
+    case 'white':
+      return import('reveal.js/theme/white.css')
+    case 'league':
+      return import('reveal.js/theme/league.css')
+    case 'sky':
+      return import('reveal.js/theme/sky.css')
+    case 'beige':
+      return import('reveal.js/theme/beige.css')
+    case 'simple':
+      return import('reveal.js/theme/simple.css')
+    case 'solarized':
+      return import('reveal.js/theme/solarized.css')
+    case 'night':
+      return import('reveal.js/theme/night.css')
+    case 'moon':
+      return import('reveal.js/theme/moon.css')
+    default:
+      return import('reveal.js/theme/black.css')
+  }
+}
