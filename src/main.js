@@ -37,6 +37,7 @@ const presentations = Object.entries(rawPresentations)
       description: parsed.meta.description || '',
       tags: parseTags(parsed.meta.tags),
       theme: parsed.meta.theme || 'black',
+      slideCount: countSlides(parsed.content),
       content: parsed.content,
     };
   })
@@ -60,6 +61,10 @@ function normalizePath(pathname) {
   }
 
   return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+}
+
+function countSlides(content) {
+  return content.split(/\n---\n/).length;
 }
 
 function parseFrontmatter(markdown) {
@@ -116,7 +121,7 @@ function renderLanding() {
       <header class="hero">
         <p class="kicker">slides.kieks.me</p>
         <h1>Markdown Präsentationen</h1>
-        <p class="lead">Automatisch aus <code>/content</code> geladen. Reveal.js unterstützt horizontale/vertikale Slides, Notes, Themes und PDF-Export.</p>
+        <p class="lead">Automatisch aus <code>/content</code> geladen. Reveal.js unterstützt horizontale/vertikale Slides, Notes, Themes und PDF-Export. ${presentations.length} Präsentation${presentations.length !== 1 ? 'en' : ''} verfügbar.</p>
       </header>
 
       <label class="search" for="search-input">
@@ -129,6 +134,7 @@ function renderLanding() {
         ${presentations.map(renderCard).join('')}
       </ul>
     </main>
+    <footer class="site-footer">slides.kieks.me — Markdown-Präsentationen mit Vite + Reveal.js</footer>
   `;
 
   const searchInput = document.querySelector('#search-input');
@@ -160,6 +166,10 @@ function renderCard(entry) {
         <h2>${escapeHtml(entry.title)}</h2>
         ${entry.description ? `<p>${escapeHtml(entry.description)}</p>` : ''}
         ${tags ? `<p class="tags">${tags}</p>` : ''}
+        <div class="card-meta">
+          <span class="badge">${entry.slideCount} Folie${entry.slideCount !== 1 ? 'n' : ''}</span>
+          <span class="badge">Theme: ${escapeHtml(entry.theme)}</span>
+        </div>
         <div class="actions">
           <a class="button" href="/slides/${encodeURIComponent(entry.slug)}">Starten</a>
           <a class="button secondary" href="/slides/${encodeURIComponent(entry.slug)}?print-pdf" target="_blank" rel="noreferrer">PDF/Print</a>

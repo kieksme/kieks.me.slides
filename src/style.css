@@ -71,6 +71,13 @@ code {
   color: var(--brand-text);
   border-radius: 0.5rem;
   padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search input:focus {
+  border-color: var(--brand-primary);
 }
 
 .grid {
@@ -91,6 +98,13 @@ code {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.card article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border-color: var(--brand-primary);
 }
 
 .card h2 {
@@ -118,11 +132,36 @@ code {
   padding: 0.15rem 0.55rem;
 }
 
-.actions {
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
   margin-top: auto;
+}
+
+.badge {
+  font-size: 0.7rem;
+  border-radius: 99px;
+  background: #1a2540;
+  border: 1px solid var(--brand-border);
+  color: var(--brand-muted);
+  padding: 0.1rem 0.5rem;
+}
+
+.actions {
+  margin-top: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 2rem 1.25rem 1.5rem;
+  color: var(--brand-muted);
+  font-size: 0.8rem;
+  opacity: 0.6;
 }
 
 .button {
