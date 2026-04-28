@@ -1,6 +1,6 @@
-import './style.css';
 import 'reveal.js/reveal.css';
 import 'reveal.js/plugin/highlight/monokai.css';
+import './style.css';
 
 import Reveal from 'reveal.js';
 import RevealMarkdown from 'reveal.js/plugin/markdown';
