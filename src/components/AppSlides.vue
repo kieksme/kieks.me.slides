@@ -32,12 +32,23 @@ const textareaEl = ref(null)
 onMounted(async () => {
   if (!presentation.value) return
 
-  await loadTheme(selectedTheme)
-
+  // Set content synchronously before any async suspension so the textarea is
+  // always populated when RevealMarkdown reads it during deck.initialize().
   if (textareaEl.value) {
     // textContent avoids any HTML-parsing issues and is what RevealMarkdown reads
     textareaEl.value.textContent = presentation.value.content
   }
+
+  // Load the theme CSS but never let a failure (e.g. a blocked Google Fonts
+  // @import inside solarized.css delaying/rejecting the link onload event)
+  // prevent the deck from being initialized.
+  try {
+    await loadTheme(selectedTheme)
+  } catch {
+    // Proceed with default styling if the theme CSS cannot be loaded.
+  }
+
+  if (!revealEl.value) return
 
   const deck = new Reveal(revealEl.value, {
     hash: true,
