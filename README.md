@@ -1,32 +1,31 @@
 # kieks.me.slides
 
-Statische Website für Markdown-basierte Präsentationen mit **Vite + Vue 3 + reveal.js**.
+Statische Website für Markdown-basierte Präsentationen mit **Vite + Vue 3 + Slidev**.
 
-## Warum dieser Stack?
+## Stack
 
 | Tool | Bewertung | Kommentar |
 |---|---|---|
-| reveal.js | sehr gut | Sehr flexibel, Notes, Print/PDF, Themes |
-| Slidev | sehr gut | Sehr gute DX, aber opinionated Framework |
-| Marp | gut | Sehr simpel, weniger interaktiv |
-| mdx-deck | mittel | Stark React-zentriert |
+| Slidev | sehr gut | Sehr gute DX, eigenständige Präsentations-Apps aus Markdown |
+| Vite + Vue 3 | sehr gut | Landing-Page als leichtgewichtige App-Shell |
 
-**Entscheidung:** `Vite + reveal.js` (statisch, leichtgewichtig, volle Kontrolle).
-Vue 3 wurde als App-Shell hinzugefügt und ermöglicht reaktive Komponenten, Pinia-State und `@unhead/vue`-Meta-Tag-Management – ohne Slidev als Framework aufzuzwingen.
+**Architektur:** Die Landing-Page (Suchfeld, Karten-Grid) ist eine eigenständige Vite+Vue-App.
+Jede Präsentation in `/content` wird durch Slidev als vollständige statische App nach `dist/slides/<slug>/` gebaut.
 
 ## Projektstruktur
 
 ```text
-content/                            # Markdown-Quellen für Präsentationen
+content/                            # Markdown-Quellen für Präsentationen (Slidev-Format)
+scripts/
+  build-slides.mjs                  # Baut alle /content/*.md mit Slidev nach dist/slides/
+  migrate-content.mjs               # Einmalig: migriert Reveal.js-Markdown zu Slidev-Format
 src/
   main.js                           # Vue-App-Einstiegspunkt (createApp + applyAppSetup)
-  App.vue                           # Root-Komponente mit pfadbasiertem Routing
+  App.vue                           # Root-Komponente (rendert immer AppLanding)
   setup/
     main.ts                         # config-vue: globale Komponenten, Pinia, Head, Provide, isDark
   components/
     AppLanding.vue                  # Landing-Page (Suche, Karten-Grid)
-    AppSlides.vue                   # Reveal.js-Slide-Viewer mit Topbar
-    AppNotFound.vue                 # 404-Seite
     PresentationCard.vue            # Einzelne Präsentationskarte
     Callout.vue                     # Global registrierte Hinweisbox (info/tip/warning/danger)
   composables/
@@ -35,8 +34,8 @@ src/
   stores/
     app.ts                          # Pinia-Store (searchQuery bleibt beim Zurücknavigieren)
   style.css                         # Globale Brand-Styles
-vite.config.js                      # Vue-Plugin
-netlify.toml                        # Netlify Build + SPA Redirects
+vite.config.js                      # Vue-Plugin für Landing-Page
+netlify.toml                        # Netlify Build + SPA/Static Redirects
 .github/workflows/ci.yml            # CI Build bei Push/PR
 ```
 
@@ -44,17 +43,13 @@ netlify.toml                        # Netlify Build + SPA Redirects
 
 - Automatische Präsentationsliste aus `/content/*.md`
 - Routing:
-  - `/` Übersicht
-  - `/slides/<name>` Präsentation
-- Reveal.js mit:
+  - `/` Übersicht (Landing-Page)
+  - `/slides/<name>/` Präsentation (Slidev-App)
+- Slidev mit:
   - horizontalen Slides (`---`)
-  - vertikalen Slides (`--`)
   - Code-Highlighting
-  - Speaker Notes (`Note:`)
-  - Themes (`theme` in Frontmatter oder `?theme=...`)
-- PDF Export über Print-Mode:
-  - `/slides/<name>?print-pdf`
-  - optionaler Button in Übersicht und Präsentation
+  - Speaker Notes (`<!-- ... -->`)
+  - PDF-Export über Slidev's eingebautem Export-Button
 - Suchfeld auf der Landing Page mit persistenter Query (Pinia-Store)
 - Vue 3 App-Shell mit config-vue-Pattern (`src/setup/main.ts`):
   - Globale `<Callout>`-Komponente (info / tip / warning / danger)
@@ -65,13 +60,13 @@ netlify.toml                        # Netlify Build + SPA Redirects
 
 ## Markdown-Format
 
-Dateien liegen in `/content` und nutzen optional Frontmatter:
+Dateien liegen in `/content` und nutzen Slidev-Frontmatter:
 
 ```md
 ---
 title: Mein Vortrag
 description: Kurzbeschreibung
-theme: solarized
+theme: default
 tags: tag1, tag2
 ---
 
@@ -81,25 +76,41 @@ tags: tag1, tag2
 
 # Folie 2
 
---
+---
 
-## Vertikale Folie
+## Weitere Folie
 
-Note:
-Nur für Speaker Notes.
+<!-- Speaker Note: Nur in den Notes sichtbar. -->
 ```
 
+**Hinweise:**
+- Slide-Trenner: `---` (horizontal, alle auf gleicher Ebene)
+- Vertikale Slides (`--` in Reveal.js) gibt es in Slidev nicht – einfach `---` verwenden
+- Speaker Notes: HTML-Kommentar `<!-- ... -->` direkt unterhalb der Folie
+
 ## Lokaler Start
+
+Landing-Page:
 
 ```bash
 npm install
 npm run dev
 ```
 
+Einzelne Präsentation mit Slidev:
+
+```bash
+npm run dev:slides
+# oder für eine bestimmte Präsentation:
+./node_modules/.bin/slidev content/<name>.md
+```
+
 Build:
 
 ```bash
-npm run build
+npm run build        # baut Slides + Landing-Page
+npm run build:slides # nur Slidev-Präsentationen
+npm run build:landing# nur Landing-Page
 npm run preview
 ```
 
@@ -108,7 +119,7 @@ npm run preview
 - Build command: `npm run build`
 - Publish directory: `dist`
 - Domain: `slides.kieks.me`
-- Redirects sind in `netlify.toml` für SPA-Routen enthalten.
+- `netlify.toml` enthält separate Redirect-Regeln für `/slides/*` (statisch) und `/*` (SPA).
 
 ## CI/CD
 

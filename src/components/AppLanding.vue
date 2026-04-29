@@ -27,13 +27,9 @@ const filtered = computed(() => {
       <p class="kicker">{{ siteConfig?.name }}</p>
       <h1>Markdown Präsentationen</h1>
       <p class="lead">
-        Automatisch aus <code>/content</code> geladen. Reveal.js unterstützt
-        horizontale/vertikale Slides, Notes, Themes und PDF-Export.
+        Automatisch aus <code>/content</code> geladen. Slidev unterstützt
+        horizontale Slides, Speaker Notes und PDF-Export.
       </p>
-      <Callout type="tip" title="Theme wechseln">
-        Query-Parameter <code>?theme=solarized</code> (oder in der Frontmatter) zum Ändern
-        des Themes nutzen.
-      </Callout>
     </header>
 
     <label class="search" for="search-input">

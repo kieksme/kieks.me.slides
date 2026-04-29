@@ -2,6 +2,14 @@
 command = "npm run build"
 publish = "dist"
 
+# Slidev presentations are pre-built static files – no rewrite needed
+[[redirects]]
+from = "/slides/*"
+to = "/slides/:splat"
+status = 200
+force = false
+
+# Landing-page SPA catch-all
 [[redirects]]
 from = "/*"
 to = "/index.html"
