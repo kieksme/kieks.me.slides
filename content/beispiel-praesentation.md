@@ -1,8 +1,8 @@
 ---
-title: Reveal.js + Markdown Demo
-description: Beispiel mit horizontalen/vertikalen Slides, Notes und Code
-theme: black
-tags: demo, revealjs, markdown
+title: Slidev + Markdown Demo
+description: Beispiel mit horizontalen Slides, Notes und Code
+theme: default
+tags: demo, slidev, markdown
 ---
 
 # Willkommen
@@ -14,17 +14,18 @@ Diese Präsentation wird direkt aus `/content` geladen.
 # Agenda
 
 - Markdown als Source of Truth
-- Reveal.js Rendering
-- PDF Export via `?print-pdf`
+- Slidev Rendering
+- PDF Export über den Exportknopf
 
---
+---
 
-## Vertikale Unterfolie
+## Unterfolie
 
-Diese Folie ist vertikal unter der Agenda angeordnet.
+Diese Folie folgt direkt nach der Agenda.
 
-Note:
+<!--
 Nur in den Speaker Notes sichtbar.
+-->
 
 ---
 
@@ -42,6 +43,6 @@ console.log(hello('Kieks'));
 
 # Theme wechseln
 
-Theme per Query-Parameter ändern:
+Theme in der Frontmatter oder per URL-Parameter ändern:
 
-`/slides/beispiel-praesentation?theme=solarized`
+`/slides/beispiel-praesentation/`

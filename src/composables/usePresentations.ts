@@ -1,7 +1,6 @@
 export interface PresentationMeta {
   title?: string
   description?: string
-  theme?: string
   tags?: string
 }
 
@@ -10,7 +9,6 @@ export interface Presentation {
   title: string
   description: string
   tags: string[]
-  theme: string
   content: string
 }
 
@@ -60,31 +58,8 @@ export const presentations: Presentation[] = Object.entries(rawFiles)
       title,
       description: meta.description || '',
       tags: parseTags(meta.tags),
-      theme: meta.theme || 'black',
       content,
     }
   })
   .sort((a, b) => a.title.localeCompare(b.title))
 
-export function loadTheme(theme: string): Promise<unknown> {
-  switch (theme) {
-    case 'white':
-      return import('reveal.js/theme/white.css')
-    case 'league':
-      return import('reveal.js/theme/league.css')
-    case 'sky':
-      return import('reveal.js/theme/sky.css')
-    case 'beige':
-      return import('reveal.js/theme/beige.css')
-    case 'simple':
-      return import('reveal.js/theme/simple.css')
-    case 'solarized':
-      return import('reveal.js/theme/solarized.css')
-    case 'night':
-      return import('reveal.js/theme/night.css')
-    case 'moon':
-      return import('reveal.js/theme/moon.css')
-    default:
-      return import('reveal.js/theme/black.css')
-  }
-}

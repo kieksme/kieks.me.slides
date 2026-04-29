@@ -16,13 +16,7 @@ defineProps({
         <span v-for="tag in tags" :key="tag" class="tag">{{ tag }}</span>
       </p>
       <div class="actions">
-        <a class="button" :href="`/slides/${encodeURIComponent(slug)}`">Starten</a>
-        <a
-          class="button secondary"
-          :href="`/slides/${encodeURIComponent(slug)}?print-pdf`"
-          target="_blank"
-          rel="noreferrer"
-        >PDF/Print</a>
+        <a class="button" :href="`/slides/${encodeURIComponent(slug)}/`">Starten</a>
       </div>
     </article>
   </li>
