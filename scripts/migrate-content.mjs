@@ -44,9 +44,10 @@ function migrateFrontmatter(raw) {
 }
 
 function migrateNotes(content) {
-  // `Note:\n<one or more lines until next slide separator or end>` → HTML comment
-  return content.replace(/^Note:\n([\s\S]*?)(?=\n---|\n--|$)/gm, (_, noteText) => {
-    return `<!--\n${noteText.trim()}\n-->`
+  // Match `\nNote:\n<text>` until the next slide separator or end of string.
+  // No `m` flag so that `$` matches end of string only (not end of line).
+  return content.replace(/\nNote:\n([\s\S]*?)(?=\n---|\n--|(?:\n*$))/g, (_, noteText) => {
+    return `\n<!--\n${noteText.trimEnd()}\n-->`
   })
 }
 
