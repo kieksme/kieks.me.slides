@@ -5,6 +5,8 @@ theme: default
 transition: slide-left
 background: https://picsum.photos/seed/slidev-cover/1920/1080
 tags: demo, slidev, features
+addons:
+  - slidev-addon-tldraw
 ---
 
 # Slidev Feature-Demo
@@ -35,6 +37,7 @@ layout: section
 - 🧩 **Komponenten** – `Arrow`, `Transform`, `AutoFitText`, `VSwitch`, `LightOrDark`, `VDrag`
 - 💻 **Code** – Highlighting, Monaco-Editor, Shiki Magic Move
 - 📊 **Diagramme** – Mermaid, PlantUML
+- ✏️ **tldraw** – interaktive Whiteboard-Diagramme
 - 🔌 **Add-ons** – Add-on-Galerie installieren
 - 🎨 **Themes** – Theme wechseln
 
@@ -579,6 +582,69 @@ Vite -> Browser : index.html ausliefern
 Browser -> Autor : Präsentation anzeigen
 @enduml
 ```
+
+---
+layout: section
+---
+
+# ✏️ tldraw
+
+---
+
+# tldraw – Interaktive Whiteboard-Diagramme
+
+`slidev-addon-tldraw` bettet [tldraw](https://tldraw.dev) direkt in Slidev ein.  
+Diagramme können **live im Browser** gezeichnet und bearbeitet werden.
+
+**Installation:**
+
+```bash
+npm install -D slidev-addon-tldraw
+```
+
+**Frontmatter aktivieren:**
+
+```yaml
+---
+addons:
+  - slidev-addon-tldraw
+---
+```
+
+Diese Demo-Präsentation hat das Add-on bereits aktiviert.
+
+---
+
+# tldraw – Neues Diagramm
+
+Leere Zeichenfläche mit festen Abmessungen – im Dev-Modus direkt bearbeitbar:
+
+```html
+<tldraw class="w-200 h-100" />
+```
+
+<tldraw class="w-full h-80" />
+
+<!--
+Im Dev-Modus (npm run dev:slides) kann das Diagramm direkt auf der Folie
+bearbeitet werden. Der Inhalt wird automatisch im public/-Ordner gespeichert
+und im Slide als doc-Attribut referenziert.
+-->
+
+---
+
+# tldraw – Vollbild-Diagramm
+
+Das Diagramm füllt die gesamte Folie:
+
+```html
+<tldraw class="inset-0 w-full h-full" />
+```
+
+Weitere Features:
+- Drag & Drop für Bilder und Assets → werden in `public/tldraw/assets/` gespeichert
+- Dark-Mode-Unterstützung folgt automatisch dem Slidev-Theme
+- Wird beim PDF-Export mit eingebettet
 
 ---
 layout: section
