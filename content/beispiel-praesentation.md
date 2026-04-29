@@ -3,6 +3,7 @@ title: Slidev Feature-Demo
 description: Vollständiger Überblick über alle wichtigen Slidev-Features
 theme: default
 transition: slide-left
+background: https://picsum.photos/seed/slidev-cover/1920/1080
 tags: demo, slidev, features
 ---
 
@@ -13,6 +14,7 @@ Slides as Code – direkt aus Markdown gebaut.
 <!--
 Willkommen! Diese Präsentation demonstriert alle wichtigen Slidev-Features.
 Navigiere mit Pfeiltasten oder Klicken durch die Folien.
+Das Hintergrundbild oben ist über das `background:`-Feld im Frontmatter gesetzt.
 -->
 
 ---
@@ -28,11 +30,12 @@ layout: section
 <v-clicks>
 
 - 📐 **Layouts** – `two-cols`, `two-cols-header`, `quote`, `statement`, `fact`, `image-right`, …
+- 🖼️ **Hintergrundbilder** – `background:` im Frontmatter, Cover-Galerie
 - 🎬 **Animationen** – `v-click`, `v-motion`, CSS-Transitionen
 - 🧩 **Komponenten** – `Arrow`, `Transform`, `AutoFitText`, `VSwitch`, `LightOrDark`, `VDrag`
 - 💻 **Code** – Highlighting, Monaco-Editor, Shiki Magic Move
 - 📊 **Diagramme** – Mermaid, PlantUML
-- 🧩 **Add-ons** – Erweiterungen installieren
+- 🔌 **Add-ons** – Add-on-Galerie installieren
 - 🎨 **Themes** – Theme wechseln
 
 </v-clicks>
@@ -149,6 +152,96 @@ url: https://vitejs.dev
 
 Bettet eine Webseite rechts ein.  
 Analog: `iframe-left`, `iframe` (volle Seite)
+
+---
+layout: section
+---
+
+# 🖼️ Hintergrundbilder
+
+---
+layout: cover
+background: https://picsum.photos/seed/mountains/1920/1080
+---
+
+# `layout: cover` mit Hintergrundbild
+
+Das `background:`-Feld im Frontmatter setzt ein Bild für die gesamte Folie.
+
+```yaml
+---
+layout: cover
+background: https://picsum.photos/seed/mountains/1920/1080
+---
+```
+
+<!--
+Die cover-Layout füllt die gesamte Folie mit dem Hintergrundbild.
+Beliebige URLs (lokal oder remote) sind möglich.
+-->
+
+---
+layout: image-right
+image: https://picsum.photos/seed/code/640/960
+---
+
+# Bild im `image-right`-Layout
+
+Das `image:`-Feld legt das Bild für das `image-right`/`image-left`-Layout fest.
+
+```yaml
+---
+layout: image-right
+image: https://picsum.photos/seed/code/640/960
+---
+```
+
+Lokale Bilder liegen in `public/`:
+
+```yaml
+image: /mein-bild.jpg
+```
+
+---
+layout: image
+image: https://picsum.photos/seed/fullscreen/1920/1080
+---
+
+# `layout: image` – Vollbild
+
+```yaml
+---
+layout: image
+image: https://picsum.photos/seed/fullscreen/1920/1080
+---
+```
+
+---
+
+# Hintergrundbilder – Alle Optionen
+
+```yaml
+# Externe URL
+background: https://picsum.photos/1920/1080
+
+# Lokale Datei (public/bg.jpg)
+background: /bg.jpg
+
+# Unsplash-Direktlink
+background: https://source.unsplash.com/1920x1080/?nature
+
+# Nur Farbe oder CSS-Gradient
+background: '#1a1a2e'
+background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+```
+
+**Cover-Galerie:** [sli.dev/resources/covers](https://sli.dev/resources/covers)  
+Fertige Hintergrundbilder, kuratiert von der Slidev-Community.
+
+<!--
+background: gilt für cover, image, section und alle anderen Layouts.
+Im image- und image-right-Layout nutzt man stattdessen das image:-Feld.
+-->
 
 ---
 layout: section
@@ -506,6 +599,7 @@ addons:
   - slidev-addon-qrcode      # <QRCode> Komponente
   - slidev-addon-excalidraw  # <Excalidraw> Diagramme
   - slidev-addon-citations   # Wissenschaftliche Zitate
+  - slidev-addon-tldraw      # Whiteboard-Diagramme
 ---
 ```
 
@@ -517,7 +611,13 @@ npm install -D slidev-addon-qrcode
 
 Dann `<QRCode value="https://sli.dev" />` direkt in Markdown nutzen.
 
-Alle Add-ons: [sli.dev/addons/gallery](https://sli.dev/addons/gallery)
+**Add-on-Galerie:** [sli.dev/resources/addon-gallery](https://sli.dev/resources/addon-gallery)
+
+<!--
+Add-ons werden wie npm-Pakete installiert und im addons:-Feld der
+Präsentation registriert. Sie können Layouts, Komponenten und Styles
+hinzufügen.
+-->
 
 ---
 layout: section
